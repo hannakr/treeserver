@@ -1,5 +1,5 @@
 
-module.exports = function () {
+module.exports = function (data, callback) {
   response = "<html><head><title>Make a new tree!</title></head>" +
     "<body><form action=\"/api/trees\" method=\"post\">" +
     "<div><label for=\"address\">Address </label>" +
@@ -13,5 +13,5 @@ module.exports = function () {
     "</div> <div>" +
     "<button>Add tree</button>" +
     "</div></form></body></html>";
-  return { contentType: 'text/html', data: response };
+  callback(null, { contentType: 'text/html', data: response });
 }
