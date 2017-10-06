@@ -14,17 +14,6 @@ var server = http.createServer(function (req, res) {
   if (req.method == 'GET') {
     console.log(url.parse(req.url).pathname);
     console.log(routes[url.parse(req.url).pathname])
-    // try {
-    //   var answer = routes[url.parse(req.url).pathname](url.parse(req.url, true).query);
-    //   //res.writeHead(200, { 'Content-Type': 'application/json' });
-    //   res.writeHead(200, { 'Content-Type': answer.contentType });
-    //   res.end(answer.data);
-    // }
-    // catch (e) {
-    //   console.log(e);
-    //   res.statusCode = 404;
-    //   res.end();
-    // }
     var routeQuery = url.parse(req.url, true).query;
     var routeFunction = routes[url.parse(req.url).pathname];
     routeFunction(routeQuery, function(err, answer) {
