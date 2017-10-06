@@ -1,3 +1,6 @@
+var cuid = require('cuid');
+var db = require('../lib/db');
+
 var treeDB = {
   '1': { address: '256 East 2nd Ave', commonName: 'Maple', latinName: 'Acer' },
   '2': { address: '520 East 1st Ave', commonName: 'Ash', latinName: 'Fraxinus' },
@@ -5,13 +8,38 @@ var treeDB = {
 };
 
 module.exports = function (treeQuery, callback) {
-  if (treeDB[treeQuery.id]) {
-    callback(null, { contentType: 'application/json', data: JSON.stringify(treeDB[treeQuery.id]) });
+  console.log(treeQuery);
+  if (Object.keys(treeQuery).length) {
+    db.get(treeQuery.id, function(err, value) {
+      if (err) {
+        return callback(err);
+      }
+      var printTree = {};
+      printTree[treeQuery.id] = value;
+      callback(null, { contentType: 'application/json', data: JSON.stringify(value) });
+    });
+    // if (treeDB[treeQuery.id]) {
+    //   var printTree = treeDB[treeQuery.id];
+    //   printTree.cid = cuid.slug();
+    //   callback(null, { contentType: 'application/json', data: JSON.stringify(printTree) });
+    // }
+    // else {
+    //   return callback ('tree not found');
+    // }
   }
   else {
-    return callback ('tree not found');
+    var stream = db.createReadStream();
+    var allTrees = {};
+    stream.on('data', function(data) {
+      console.log('%s = %j', data.key, data.value);
+      allTrees[data.key] = data.value;
+    });
+    stream.once('end', function() {
+      callback(null, { contentType: 'application/json', data: JSON.stringify(allTrees) });
+    });
+    stream.once('error', function(err) {
+      console.error('stream emitted error:', err);
+      return callback(err);
+    });
   }
-
 }
-
-//node -pe "require('url').parse('/test?q=1', true)"
