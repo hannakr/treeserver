@@ -10,7 +10,9 @@ var routes = { '/api/parsetime': views.parsetime,
   '/api/unixtime': views.unixtime,
   '/api/trees': views.trees,
   '/api/newtree': views.newtree,
-  '/api/deltree': views.deltree };
+  '/api/deltree': views.deltree,
+  '/api/addtree': views.addtree,
+  '/api/delete': views.delete };
 
 var server = http.createServer(function (req, res) {
   if (req.method == 'GET') {
@@ -32,21 +34,39 @@ var server = http.createServer(function (req, res) {
     })
   }
   else if (req.method == 'POST') {
+    console.log(url.parse(req.url).pathname);
+    console.log(routes[url.parse(req.url).pathname])
+    var routeQuery = url.parse(req.url, true).query;
+    var routeFunction = routes[url.parse(req.url).pathname];
     var treeString = '';
     req.setEncoding('utf8');
     req.on('data', function (data) {
       treeString += data;
     });
     req.on('end', function () {
-      treeData = lib.queryParse(treeString);
-      console.log(treeData);
-      lib.db.put(cuid.slug(), treeData, function(err) {
+      routeFunction(routeQuery, treeString, function(err, answer) {
         if (err) {
-          console.error('error putting treeData:', err);
+          // do error stuff
+          console.log(err);
+          res.statusCode = 404;
+          res.end("File not found");
+          return;
         }
+        // do success stuff
+        res.writeHead(200, { 'Content-Type': answer.contentType });
+        res.end(answer.data);
       });
-      console.log(JSON.parse(treeData));
-      res.end();
+    });
+  }
+      // treeData = lib.queryParse(treeString);
+      // console.log(treeData);
+      // lib.db.put(cuid.slug(), treeData, function(err) {
+      //   if (err) {
+      //     console.error('error putting treeData:', err);
+      //   }
+      // });
+      // console.log(JSON.parse(treeData));
+      //res.end();
       // var options = {
       //   port: 3000,
       //   path: 'api/trees'
@@ -56,8 +76,8 @@ var server = http.createServer(function (req, res) {
       // }).on('error', function(e) {
       //   console.log("Got error: " + e.message);
       // });
-    });
-  }
+    //});
+  //}
   req.on('error', function(e) {
     console.log('problem with request: ' + e.message);
     res.end();

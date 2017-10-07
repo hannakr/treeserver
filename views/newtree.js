@@ -1,7 +1,7 @@
 
 module.exports = function (data, callback) {
   response = "<html><head><title>Make a new tree!</title></head>" +
-    "<body><form action=\"/api/trees\" method=\"post\">" +
+    "<body><form action=\"/api/addtree\" method=\"post\">" +
     "<div><label for=\"address\">Address </label>" +
     "<input name=\"address\" id=\"address\" value=\"\">" +
     "</div> <div>" +
