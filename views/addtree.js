@@ -1,7 +1,7 @@
 var cuid = require('cuid');
 var lib = require("../lib");
 
-module.exports = function (treeQuery, treeString, callback) {
+module.exports = function (treeId, treeString, callback) {
   console.log(treeString);
   lib.db.put(cuid.slug(), treeString, function(err) {
     if (err) {
