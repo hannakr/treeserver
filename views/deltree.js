@@ -7,7 +7,7 @@ module.exports = function (treeQuery, treeString, callback) {
   console.log(treeString)
   treeData = JSON.parse(treeString);
   console.log(treeData);
-  lib.db.del(treeData.treeid, function(err) {
+  lib.db.del(treeData.id, function(err) {
     if (err) {
       return callback(err);
     }
