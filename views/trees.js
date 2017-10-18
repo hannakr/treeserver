@@ -1,21 +1,15 @@
 var cuid = require('cuid');
 var db = require('../lib/db');
 
-var treeDB = {
-  '1': { address: '256 East 2nd Ave', commonName: 'Maple', latinName: 'Acer' },
-  '2': { address: '520 East 1st Ave', commonName: 'Ash', latinName: 'Fraxinus' },
-  '3': { address: '189 Keefer St', commonName: 'Cherry', latinName: 'Prunus' }
-};
-
-module.exports = function (treeQuery, callback) {
-  console.log(treeQuery);
-  if (Object.keys(treeQuery).length) {
-    db.get(treeQuery.id, function(err, value) {
+module.exports = function (treeId, callback) {
+  console.log(treeId);
+  if (treeId) {
+    db.get(treeId, function(err, value) {
       if (err) {
         return callback(err);
       }
       var printTree = {};
-      printTree[treeQuery.id] = JSON.parse(value);
+      printTree[treeId] = JSON.parse(value);
       callback(null, { contentType: 'application/json', data: JSON.stringify(printTree) });
     });
   }
