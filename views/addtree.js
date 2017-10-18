@@ -3,6 +3,7 @@ var lib = require("../lib");
 
 module.exports = function (treeQuery, treeString, callback) {
   //treeData is a JSON object
+  console.log(treeString);
   treeData = lib.queryParse(treeString);
   console.log(treeData);
   lib.db.put(cuid.slug(), JSON.stringify(treeData), function(err) {
