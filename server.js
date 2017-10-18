@@ -6,13 +6,9 @@ var cuid = require('cuid');
 var views = require("./views");
 var lib = require("./lib");
 
-var routes = { '/api/parsetime': views.parsetime,
-  '/api/unixtime': views.unixtime,
-  '/api/trees': views.trees,
-  '/api/newtree': views.newtree,
+var routes = { '/api/trees': views.trees,
   '/api/deltree': views.deltree,
-  '/api/addtree': views.addtree,
-  '/api/delete': views.delete };
+  '/api/addtree': views.addtree };
 
 var server = http.createServer(function (req, res) {
   if (req.method == 'GET') {
@@ -58,26 +54,6 @@ var server = http.createServer(function (req, res) {
       });
     });
   }
-      // treeData = lib.queryParse(treeString);
-      // console.log(treeData);
-      // lib.db.put(cuid.slug(), treeData, function(err) {
-      //   if (err) {
-      //     console.error('error putting treeData:', err);
-      //   }
-      // });
-      // console.log(JSON.parse(treeData));
-      //res.end();
-      // var options = {
-      //   port: 3000,
-      //   path: 'api/trees'
-      // };
-      // http.get(options, function(res) {
-      //   console.log("Got response: " + res.statusCode);
-      // }).on('error', function(e) {
-      //   console.log("Got error: " + e.message);
-      // });
-    //});
-  //}
   req.on('error', function(e) {
     console.log('problem with request: ' + e.message);
     res.end();
