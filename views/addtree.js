@@ -3,11 +3,16 @@ var lib = require("../lib");
 
 module.exports = function (treeId, treeString, callback) {
   console.log(treeString);
-  lib.db.put(cuid.slug(), treeString, function(err) {
+  var newId = cuid.slug();
+  lib.db.put(newId, treeString, function(err) {
     if (err) {
-      console.error('error putting treeData:', err);
+      console.error('error putting treeString:', err);
       return callback(err);
     }
+    var treeData = {};
+    treeData[newId] = JSON.parse(treeString);
+    var prettyResults = new Object();
+    prettyResults.results = lib.formatResults(treeData);
+    callback(null, { contentType: 'application/json', data: JSON.stringify(prettyResults) });
   });
-  callback(null, { contentType: 'application/json', data: treeString });
 }
