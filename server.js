@@ -24,16 +24,13 @@ var server = http.createServer(function (req, res) {
   // parse the url to make sure you're responding to the right one
   // parse the url to get the id
   var pathRequest = lib.pathParse(url.parse(req.url).pathname);
-  console.log(pathRequest);
   if (pathRequest[1] == 'api' && pathRequest[2] == 'trees') {
     var treeId = pathRequest[3];
     // depending on the method, go to the relevant function
     if (req.method == 'GET' || req.method == 'DELETE') {
-      console.log(url.parse(req.url).pathname);
-      console.log(routes[url.parse(req.url).pathname])
       var routeQuery = url.parse(req.url, true).query;
       var routeFunction = routes[req.method];
-      routeFunction(treeId, function(err, answer) {
+      routeFunction(treeId, routeQuery, function(err, answer) {
         if (err) {
           // do error stuff
           console.log(err);
@@ -47,8 +44,6 @@ var server = http.createServer(function (req, res) {
       })
     }
     else if (req.method == 'POST' || req.method == 'PUT') {
-      console.log(url.parse(req.url).pathname);
-      console.log(routes[url.parse(req.url).pathname])
       var routeFunction = routes[req.method];
       var treeString = '';
       req.setEncoding('utf8');
